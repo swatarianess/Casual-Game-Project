@@ -1,8 +1,8 @@
 # Casual-Game-Project
-Term 2 Subject
+Term 2 Subject. Platformer game, similar to push the boxes. The boxes will be assignments equations and said boxes need to go to holes with the answer to the equation.
 
-Assignments:
-Marik;
+# Assignments:
+Marik
   -Main Characters
   -Boxes behavior
   -Level boundraries behavior
@@ -14,7 +14,7 @@ Stephen
   -Equation Assignment
   -Boxes graphics
   
-Tal
+ Tal
   -Hostile NPC's collision w/ characters & Boxes
   -Target begavior
   
