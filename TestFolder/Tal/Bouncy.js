@@ -4,30 +4,35 @@ window.onload = function () {
     var c = document.getElementById("ctx"),
         ctx = c.getContext("2d"),
     //Create 3 balls. 2 with colour #ff00ff and 1 default colour. Also 1 array.
-        X1 = new Ball(null,"#ff00ff"),
-        I1 = new Ball(null,"#ff00ff"),
+        X1 = new Ball(),
+        I1 = new Ball(),
         numBalls = 3,
         bounce = -1.0,
         human = new Ball(),
         objectsToDraw = [];
 
     //Giving value to the human variables
-    human.mass = 1.5;
+    human.mass = 1;
     human.x = 50;
     human.y = 50;
     human.vx = Math.random() * 6 - 4;
+    human.vy = Math.random() * 3 - 4;
 
     //Giving values to the x1 variables (These are the enemies)
     X1.mass = 1;
-    X1.x = 100;
-    X1.y = 100;
+    X1.x = 50;
+    X1.y = 200;
     X1.vx = Math.random() * 6 - 5;
+    X1.vy = Math.random() * 3 - 4;
+
 
     //Giving values to the I1 variables (These too are the enemies)
     I1.mass = 1;
-    I1.x = 100;
-    I1.y = 150;
+    I1.x = 50;
+    I1.y = 450;
     I1.vx = Math.random() * 6 - 5;
+    I1.vy = Math.random() * 3 - 4;
+
 
     objectsToDraw.push(X1,I1,human);
 
@@ -114,7 +119,6 @@ window.onload = function () {
         ctx.clearRect(0,0,c.width, c.height);
 
         objectsToDraw.forEach(move);
-
         for(var ballA, i = 0, len = numBalls - 1; i < len; i++){
             ballA = objectsToDraw[i];
             for(var ballB, j = i + 1; j < numBalls; j++ ){
