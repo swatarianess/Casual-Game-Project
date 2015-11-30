@@ -12,6 +12,8 @@ function Ball (radius, color) {
   this.scaleY = 0.4;
   this.color = utils.parseColor(color);
   this.lineWidth = 1;
+  this.equation = "";
+  this.id = "";
 }
 
 Ball.prototype.draw = function (context) {
@@ -24,7 +26,7 @@ Ball.prototype.draw = function (context) {
   context.fillStyle = this.color;
   context.beginPath();
   //x, y, radius, start_angle, end_angle, anti-clockwise
-  context.arc(0, 0, this.radius, 0, (Math.PI * 2), true);
+  context.arc(0, 0, this.radius, 0, (Math.PI * 2));
   context.closePath();
   context.fill();
   if (this.lineWidth > 0) {
@@ -40,4 +42,8 @@ Ball.prototype.getBounds = function () {
     width: this.radius * 2,
     height: this.radius * 2
   };
+};
+
+Ball.prototype.getEquation = function(){
+    return this.equation;
 };

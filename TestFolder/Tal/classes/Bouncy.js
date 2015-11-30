@@ -2,12 +2,12 @@ window.onload = function () {
     var c = document.getElementById("ctx"),
         ctx = c.getContext("2d"),
     //Create 3 balls. 2 with colour #ff00ff and 1 default colour. Also 1 array.
-        X1 = new Ball(),
-        I1 = new Ball(),
-        numBalls = 3,
-        bounce = -1.0,
-        human = new Ball(),
-        objectsToDraw = [];
+        X1 = new Ball(Math.random() * 100),
+        I1 = new Ball(Math.random() * 100),
+        human = new Ball(Math.random() * 100),
+        objectsToDraw = [],
+        log = document.getElementById("debug"),
+        numBalls = 3;
 
     //Giving value to the human variables
     human.mass = 1;
@@ -15,6 +15,8 @@ window.onload = function () {
     human.y = 50;
     human.vx = Math.random() * 6 - 4;
     human.vy = Math.random() * 3 - 4;
+    human.id = "human";
+    human.equation = "N/A";
 
     //Giving values to the x1 variables (These are the enemies)
     X1.mass = 1;
@@ -23,6 +25,8 @@ window.onload = function () {
     X1.vx = Math.random() * 6 - 5;
     X1.vy = Math.random() * 3 - 4;
     X1.color = "#ff00ff";
+    X1.id = "X1";
+    X1.equation = "23 + 23";
 
 
     //Giving values to the I1 variables (These too are the enemies)
@@ -32,17 +36,30 @@ window.onload = function () {
     I1.vx = Math.random() * 6 - 5;
     I1.vy = Math.random() * 3 - 4;
     I1.color = "#ff00ff";
+    I1.id="I1";
+    I1.equation = "2+2";
 
 
     objectsToDraw.push(X1,I1,human);
 
+    function rotate (x, y, sin, cos, reverse) {
+        return {
+            x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
+            y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
+        };
+    }
 
     function checkCollision (ball0, ball1) {
         var dx = ball1.x - ball0.x,
             dy = ball1.y - ball0.y,
             dist = Math.sqrt(dx * dx + dy * dy);
         //collision handling code here
-        if (dist < ball0.radius + ball1.radius) {
+        if (dist < ((ball0.radius + ball1.radius)/2)) {
+
+            //Testing equation allocation
+            log.value = "| " + ball0.id + " eq: " + ball0.getEquation() + "| \n"
+                + "| " + ball1.id + " eq: " + ball1.getEquation() + "| \n";
+
             //calculate angle, sine, and cosine
             var angle = Math.atan2(dy, dx),
                 sin = Math.sin(angle),
@@ -60,11 +77,9 @@ window.onload = function () {
             vel0.x = ((ball0.mass - ball1.mass) * vel0.x + 2 * ball1.mass * vel1.x) /
                 (ball0.mass + ball1.mass);
             vel1.x = vxTotal + vel0.x;
-            //update position - to avoid objects becoming stuck together
-            var absV = Math.abs(vel0.x) + Math.abs(vel1.x),
-                overlap = (ball0.radius + ball1.radius) - Math.abs(pos0.x - pos1.x);
-            pos0.x += vel0.x / absV * overlap;
-            pos1.x += vel1.x / absV * overlap;
+            //update position
+            pos0.x += vel0.x;
+            pos1.x += vel1.x;
             //rotate positions back
             var pos0F = rotate(pos0.x, pos0.y, sin, cos, false),
                 pos1F = rotate(pos1.x, pos1.y, sin, cos, false);
@@ -82,12 +97,7 @@ window.onload = function () {
             ball1.vy = vel1F.y;
         }
     }
-    function rotate (x, y, sin, cos, reverse) {
-        return {
-            x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
-            y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
-        };
-    }
+
     function move (ball){
         ball.x += ball.vx;
         ball.y += ball.vy;
@@ -119,12 +129,12 @@ window.onload = function () {
         window.requestAnimationFrame(drawFrame, c);
         ctx.clearRect(0,0,c.width, c.height);
 
-        objectsToDraw.forEach(move);
+         objectsToDraw.forEach(move);
         for(var ballA, i = 0, len = numBalls - 1; i < len; i++){
             ballA = objectsToDraw[i];
             for(var ballB, j = i + 1; j < numBalls; j++ ){
                 ballB = objectsToDraw[j];
-                checkCollision(ballA,ballB);
+                checkCollision(ballB,ballA);
             }
         }
         objectsToDraw.forEach(draw);
