@@ -11,19 +11,6 @@ function Ball (radius, color) {
   this.lineWidth = 1;
 }
 
-function Ball1 (radius, color) {
-  if (radius === undefined) { radius = 40; }
-  if (color === undefined) { color = "#ff00ff"; }
-  this.x = 0;
-  this.y = 0;
-  this.radius = radius;
-  this.rotation = 0;
-  this.scaleX = 0.4;
-  this.scaleY = 0.4;
-  this.color = utils.parseColor(color);
-  this.lineWidth = 1;
-}
-
 Ball.prototype.draw = function (context) {
   context.save();
   context.translate(this.x, this.y);
