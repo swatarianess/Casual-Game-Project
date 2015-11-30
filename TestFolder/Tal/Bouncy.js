@@ -1,5 +1,3 @@
-ctx.font = "32px Ariel"; //Font used
-
 window.onload = function () {
     var c = document.getElementById("ctx"),
         ctx = c.getContext("2d"),
@@ -24,6 +22,7 @@ window.onload = function () {
     X1.y = 200;
     X1.vx = Math.random() * 6 - 5;
     X1.vy = Math.random() * 3 - 4;
+    X1.color = "#ff00ff";
 
 
     //Giving values to the I1 variables (These too are the enemies)
@@ -32,6 +31,7 @@ window.onload = function () {
     I1.y = 450;
     I1.vx = Math.random() * 6 - 5;
     I1.vy = Math.random() * 3 - 4;
+    I1.color = "#ff00ff";
 
 
     objectsToDraw.push(X1,I1,human);
@@ -96,19 +96,20 @@ window.onload = function () {
     function checkWalls(ball){
         if (ball.x + ball.radius > c.width) {
             ball.x = c.width - ball.radius;
-            ball.vx *= bounce;
+            ball.vx = -ball.vx;
         } else if (ball.x - ball.radius < 0) {
             ball.x = ball.radius;
-            ball.vx *= bounce;
+            ball.vx = -ball.vx;
         }
         if (ball.y + ball.radius > c.height) {
             ball.y = c.height - ball.radius;
-            ball.vy *= bounce;
+            ball.vy = -ball.vy;
         } else if (ball.y - ball.radius < 0) {
             ball.y = ball.radius;
-            ball.vy *= bounce;
+            ball.vy = -ball.vy;
         }
     }
+
     function draw (ball) {
         ball.draw(ctx);
     }
