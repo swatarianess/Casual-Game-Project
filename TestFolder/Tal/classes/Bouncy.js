@@ -104,18 +104,18 @@ window.onload = function () {
         checkWalls(ball);
     }
     function checkWalls(ball){
-        if (ball.x + ball.radius > c.width) {
-            ball.x = c.width - ball.radius;
+        if (ball.x + (ball.radius/2) > c.width) {
+            ball.x = c.width - (ball.radius/2);
             ball.vx = -ball.vx;
-        } else if (ball.x - ball.radius < 0) {
-            ball.x = ball.radius;
+        } else if (ball.x - (ball.radius/2) < 0) {
+            ball.x = (ball.radius/2);
             ball.vx = -ball.vx;
         }
-        if (ball.y + ball.radius > c.height) {
-            ball.y = c.height - ball.radius;
+        if (ball.y + (ball.radius/2) > c.height) {
+            ball.y = c.height - (ball.radius/2);
             ball.vy = -ball.vy;
-        } else if (ball.y - ball.radius < 0) {
-            ball.y = ball.radius;
+        } else if (ball.y - (ball.radius/2) < 0) {
+            ball.y = (ball.radius/2);
             ball.vy = -ball.vy;
         }
     }
