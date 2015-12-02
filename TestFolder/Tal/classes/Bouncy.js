@@ -2,15 +2,15 @@ window.onload = function () {
     var c = document.getElementById("ctx"),
         ctx = c.getContext("2d"),
     //Create 3 balls. 2 with colour #ff00ff and 1 default colour. Also 1 array.
-        X1 = new Ball(Math.random() * 100),
-        I1 = new Ball(Math.random() * 100),
-        human = new Ball(Math.random() * 100),
+        X1 = new Ball(Math.random() * 125),
+        I1 = new Ball(Math.random() * 125),
+        human = new Ball(Math.random() * 125),
         objectsToDraw = [],
         log = document.getElementById("debug"),
         numBalls = 3;
 
     //Giving value to the human variables
-    human.mass = 1;
+    human.mass = human.radius;
     human.x = 50;
     human.y = 50;
     human.vx = Math.random() * 6 - 4;
@@ -19,18 +19,18 @@ window.onload = function () {
     human.equation = "N/A";
 
     //Giving values to the x1 variables (These are the enemies)
-    X1.mass = 1;
+    X1.mass = X1.radius;
     X1.x = 50;
     X1.y = 200;
     X1.vx = Math.random() * 6 - 5;
     X1.vy = Math.random() * 3 - 4;
     X1.color = "#ff00ff";
     X1.id = "X1";
-    X1.equation = "23 + 23";
+    X1.equation = "4+4";
 
 
     //Giving values to the I1 variables (These too are the enemies)
-    I1.mass = 1;
+    I1.mass = I1.radius;
     I1.x = 50;
     I1.y = 450;
     I1.vx = Math.random() * 6 - 5;
@@ -57,8 +57,8 @@ window.onload = function () {
         if (dist < ((ball0.radius + ball1.radius)/2)) {
 
             //Testing equation allocation
-            log.value = "| " + ball0.id + " eq: " + ball0.getEquation() + "| \n"
-                + "| " + ball1.id + " eq: " + ball1.getEquation() + "| \n";
+            log.value = "| " + ball0.id + " eq: " + ball0.getEquation() + " | \n"
+                + "| " + ball1.id + " eq: " + ball1.getEquation() + " | \n ";
 
             //calculate angle, sine, and cosine
             var angle = Math.atan2(dy, dx),
