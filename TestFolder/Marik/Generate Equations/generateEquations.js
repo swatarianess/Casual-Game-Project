@@ -1,3 +1,6 @@
+/**
+ * Created by MB on 06/12/2015.
+ */
 //MB, tenth draft
 function convertEq(num1, num2, sign, ans) {
     if (num1 === undefined || num2 === undefined || sign === undefined) {
@@ -32,7 +35,7 @@ function convertEq(num1, num2, sign, ans) {
             newNum2 = ans / newNum1;
         } else {
             newSign = "/";
-            newNum2 = newNum1 / ans;
+            newNum2 = NewNum1 / ans;
         }
     }
 
@@ -56,17 +59,14 @@ function checkEq(eq) {
                 if (num1 - num2 < 0) {
                     return false;
                 }
-                break;
             case "/":
                 if (num1 % num2 !== 0 || num2 > 12) {
                     return false;
                 }
-                break;
             case "*":
                 if (num1 > 12 || num2 > 12) {
                     return false;
                 }
-                break;
             default:
                 return true;
         }
@@ -90,15 +90,15 @@ function genEq(diff, lvl, ans) {
         sign = sign * 2;
     }
 
-    while(!goodEq) {
+    do {
         var num1 = Math.random() * 10 * diff * Math.ceil(lvl / 10); //Rebalance later.
         var num2 = Math.random() * 10 * diff * Math.ceil(lvl / 10); //Rebalance later.
         eq = convertEq(num1, num2, sign, ans || "nope");
         splitEq = eq.split(" ");
         goodEq = checkEq(splitEq);
-    }
+    } while (!goodEq)
 
     eq = eq + " " + eval(eq);
-    //document.getElementById("result").innerHTML = eq;
+    document.getElementById("result").innerHTML = eq;
     return eq;
 }

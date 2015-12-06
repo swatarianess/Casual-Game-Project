@@ -1,6 +1,7 @@
 window.onload = function () {
     var c = document.getElementById("ctx"),
         ctx = c.getContext("2d"),
+
     //Create 3 balls. 2 with colour #ff00ff and 1 default colour. Also 1 array.
         X1 = new Ball(Math.random() * 125),
         I1 = new Ball(Math.random() * 125),
@@ -10,7 +11,6 @@ window.onload = function () {
         numBalls = 3;
 
     //Giving value to the human variables
-    human.mass = human.radius;
     human.x = 50;
     human.y = 50;
     human.vx = Math.random() * 6 - 4;
@@ -19,18 +19,15 @@ window.onload = function () {
     human.equation = "N/A";
 
     //Giving values to the x1 variables (These are the enemies)
-    X1.mass = X1.radius;
     X1.x = 50;
     X1.y = 200;
     X1.vx = Math.random() * 6 - 5;
     X1.vy = Math.random() * 3 - 4;
     X1.color = "#ff00ff";
     X1.id = "X1";
-    X1.equation = "4+4";
-
+    X1.equation = "24+24";
 
     //Giving values to the I1 variables (These too are the enemies)
-    I1.mass = I1.radius;
     I1.x = 50;
     I1.y = 450;
     I1.vx = Math.random() * 6 - 5;
@@ -38,7 +35,6 @@ window.onload = function () {
     I1.color = "#ff00ff";
     I1.id="I1";
     I1.equation = "2+2";
-
 
     objectsToDraw.push(X1,I1,human);
 
@@ -64,14 +60,19 @@ window.onload = function () {
             var angle = Math.atan2(dy, dx),
                 sin = Math.sin(angle),
                 cos = Math.cos(angle),
+
             //rotate ball0's position
                 pos0 = {x: 0, y: 0}, //point
+
             //rotate ball1's position
                 pos1 = rotate(dx, dy, sin, cos, true),
+
             //rotate ball0's velocity
                 vel0 = rotate(ball0.vx, ball0.vy, sin, cos, true),
+
             //rotate ball1's velocity
                 vel1 = rotate(ball1.vx, ball1.vy, sin, cos, true),
+
             //collision reaction
                 vxTotal = vel0.x - vel1.x;
             vel0.x = ((ball0.mass - ball1.mass) * vel0.x + 2 * ball1.mass * vel1.x) /
@@ -103,6 +104,7 @@ window.onload = function () {
         ball.y += ball.vy;
         checkWalls(ball);
     }
+
     function checkWalls(ball){
         if (ball.x + (ball.radius/2) > c.width) {
             ball.x = c.width - (ball.radius/2);
@@ -128,13 +130,12 @@ window.onload = function () {
     (function drawFrame () {
         window.requestAnimationFrame(drawFrame, c);
         ctx.clearRect(0,0,c.width, c.height);
-
          objectsToDraw.forEach(move);
         for(var ballA, i = 0, len = numBalls - 1; i < len; i++){
             ballA = objectsToDraw[i];
             for(var ballB, j = i + 1; j < numBalls; j++ ){
                 ballB = objectsToDraw[j];
-                checkCollision(ballB,ballA);
+                checkCollision(ballA, ballB);
             }
         }
         objectsToDraw.forEach(draw);
