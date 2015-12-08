@@ -95,15 +95,15 @@ PlayChar.prototype.draw = function (context) {
     if (this.x < 0) {
         this.x = 0;
         this.vx *= this.bounce;
-    } else if (this.x + this.width > c.width) {
-        this.x = c.width - this.width;
+    } else if (this.x + this.width > context.width) {
+        this.x = context.width - this.width;
         this.vx *= this.bounce;
     }
     if (this.y < 0) {
         this.y = 0;
         this.vy *= this.bounce;
-    } else if (this.y + this.height > c.height) {
-        this.y = c.height - this.height;
+    } else if (this.y + this.height > context.height) {
+        this.y = context.height - this.height;
         this.vy *= this.bounce;
     }
 
