@@ -1,8 +1,4 @@
-/**
- * Created by Steve on 07/12/2015.
- */
-
-(function() {
+(function () {
 //Canvas
     var canvas = document.querySelector("canvas");
     var ctx = canvas.getContext("2d");
@@ -67,9 +63,7 @@
 
 //Vars for debugging purposes
     //Execution time for startup
-    var start = new Date().getTime();
-    var end = null;
-    var time = end - start;
+
 
 //Add keyboard listeners
     window.addEventListener("keydown", function (event) {
@@ -114,10 +108,9 @@
 
     update();
 
-    function update()
-    {
+    function update() {
         //The animation loop
-        window.requestAnimationFrame(update, canvas);
+        requestAnimationFrame(update, canvas);
 
         switch (gameState) {
             case LOADING:
@@ -146,13 +139,11 @@
         return document.readyState === "complete" || document.readyState === "interactive";
     }
 
-    function loadHandler()
-    {
-        if(checkLoaded()){
+    function loadHandler() {
+        if (checkLoaded()) {
             gameState = BUILD_MAP;
             console.log("Game loaded.")
         }
-
     }
 
     /**
@@ -170,7 +161,7 @@
                     var tilesheetX = Math.floor((currentTile - 1) % tilesheetColumns) * SIZE;
                     var tilesheetY = Math.floor((currentTile - 1) / tilesheetColumns) * SIZE;
 
-                    switch(currentTile){
+                    switch (currentTile) {
                         case FLOOR:
                             //TODO Create floor objects
                             break;
@@ -198,8 +189,7 @@
     /**
      * Creating Objects.
      */
-    function createObjects()
-    {
+    function createObjects() {
 
         hudDisplay = Object.create(spriteObject);
         hudDisplay.sourceX = 0;
@@ -226,36 +216,30 @@
 
     }
 
-    function playGame()
-    {
+    function playGame() {
         //Up
-        if(moveUp && !moveDown)
-        {
+        if (moveUp && !moveDown) {
             hudMessage.text = "UP key.";
         }
 
         //Down
-        if(moveDown && !moveUp)
-        {
+        if (moveDown && !moveUp) {
             hudMessage.text = "Down Key.";
         }
 
         //Left
-        if(moveLeft && !moveRight)
-        {
+        if (moveLeft && !moveRight) {
             hudMessage.text = "Left Key."
         }
 
         //Right
-        if(moveRight && !moveLeft)
-        {
+        if (moveRight && !moveLeft) {
             hudMessage.text = "Right Key.";
         }
         //TODO Add all the collision code here.
     }
 
-    function render()
-    {
+    function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         //Display the sprites
@@ -264,28 +248,35 @@
                 var sprite = sprites[i];
                 if (sprite.visible) {
                     ctx.drawImage
-                    (
-                        image,
-                        sprite.sourceX, sprite.sourceY,
-                        sprite.sourceWidth, sprite.sourceHeight,
-                        Math.floor(sprite.x), Math.floor(sprite.y),
-                        sprite.width, sprite.height
-                    );
+                       (
+                           image,
+                           sprite.sourceX, sprite.sourceY,
+                           sprite.sourceWidth, sprite.sourceHeight,
+                           Math.floor(sprite.x), Math.floor(sprite.y),
+                           sprite.width, sprite.height
+                       );
                 }
             }
         }
-
+        if (hudMessage !== null) {
+            ctx.font = hudMessage.font;
+            ctx.fill = hudMessage.fill;
+            ctx.fillText(hudMessage.text, hudMessage.x, hudMessage.y);
+        }
         //Display the game messages
-        if (messages.length !== 0) {
-            for (var j = 0; j < messages.length; j++) {
-                var message = messages[i];
-                if (message.visible) {
-                    ctx.font = message.font;
-                    ctx.fillStyle = message.fillStyle;
-                    ctx.textBaseline = message.textBaseline;
-                    ctx.fillText(message.text, message.x, message.y);
-                }
-            }
-        }
+        /*
+         if (messages.length !== 0) {
+         for (var j = 0; j < messages.length; j++) {
+         var m = messages[i];
+         if (m.visible) {
+         ctx.font = m.font;
+         ctx.fillStyle = m.fillStyle;
+         ctx.textBaseline = m.textBaseline;
+         ctx.fillText(m.text, m.x, m.y);
+         }
+         }
+         }
+         */
     }
+
 }());
