@@ -64,7 +64,6 @@
 //Vars for debugging purposes
     //Execution time for startup
 
-
 //Add keyboard listeners
     window.addEventListener("keydown", function (event) {
         switch (event.keyCode) {
@@ -140,7 +139,9 @@
     }
 
     function loadHandler() {
+        console.time("Resources loaded");
         if (checkLoaded()) {
+            console.timeEnd("Resources loaded");
             gameState = BUILD_MAP;
             console.log("Game loaded.")
         }
@@ -206,8 +207,8 @@
 
 
         hudMessage = Object.create(messageObject);
-        hudMessage.x = 0;
-        hudMessage.y = 64;
+        hudMessage.x = canvas.width / 2;
+        hudMessage.y = 30;
         hudMessage.font = "bold 30px Helvetica";
         hudMessage.fillStyle = "black";
         hudMessage.text = "";
@@ -261,6 +262,8 @@
         if (hudMessage !== null) {
             ctx.font = hudMessage.font;
             ctx.fill = hudMessage.fill;
+            ctx.fillStyle = hudMessage.fillStyle;
+            ctx.textAlign = "center";
             ctx.fillText(hudMessage.text, hudMessage.x, hudMessage.y);
         }
         //Display the game messages
