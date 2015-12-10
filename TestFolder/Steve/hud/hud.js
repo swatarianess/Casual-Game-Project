@@ -33,7 +33,7 @@
     var SIZE = 32;
 
 //The number of rows and columns
-    var ROWS = map.length;
+    var ROWS = mapObjects.length;
     var COLUMNS = null;
 
 //The number of columns on the tilesheet
@@ -141,18 +141,19 @@
         render();
     }
 
-    function checkLoaded() {
-        return document.readyState === "complete" || document.readyState === "interactive";
-    }
-
     function loadHandler() {
         console.time("Resources loaded");
-        if (checkLoaded()) {
+        assetsLoaded++;
+
+        if(assetsLoaded === assetsToLoad.length){
+            image.removeEventListener("load", loadHandler, false);
             console.timeEnd("Resources loaded");
             gameState = BUILD_MAP;
             console.log("Game loaded.")
         }
+
     }
+
 
     /**
      *  Builds the map, placing platforms, enemies and the player.
@@ -284,7 +285,30 @@
             hudMessage.text = "Right Key.";
         }
         //TODO Add the collision code here.
+        //TODO Add destroyBox() when target and boxObject collide
     }
+
+    /**
+     *  This should be called when it reaches the target. As a means of making the box vanish.
+     * @param box The boxObject that will be "destroyed".
+     */
+    function destroyBox(box)
+    {
+        //Change the hedgehog's state and update the object
+        box.state = box.FINISH;
+        box.update();
+
+        //TODO Add a flag to check whether or not it has reached the target?
+
+        //Remove the hedgehog after 500ms
+        setTimeout(killBox, 500);
+
+        function killBox()
+        {
+            box.visible = false;
+        }
+    }
+
 
     /**
      * Refresh the screen and redraws the sprites.
@@ -310,12 +334,31 @@
         }
 
         //TODO create a better method of which to display multiple messages?
+       /*
         if (hudMessage !== null) {
             ctx.font = hudMessage.font;
             ctx.fill = hudMessage.fill;
             ctx.fillStyle = hudMessage.fillStyle;
             ctx.textAlign = "center";
             ctx.fillText(hudMessage.text, hudMessage.x, hudMessage.y);
+        }
+        */
+
+        //Display the game messages
+        if(messages.length !== 0)
+        {
+            for(var i = 0; i < messages.length; i++)
+            {
+                var message = messages[i];
+                if(message.visible)
+                {
+                    ctx.font = message.font;
+                    ctx.fillStyle = message.fillStyle;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = message.textBaseline;
+                    ctx.fillText(message.text, message.x, message.y);
+                }
+            }
         }
 
     }
