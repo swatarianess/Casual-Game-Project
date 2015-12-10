@@ -30,6 +30,18 @@ var spriteObject =
     vy: 0,
     visible: true,
 
+    //Physics properties
+    accelerationX: 0,
+    accelerationY: 0,
+    speedLimit: 5,
+    friction: 0.96,
+    bounce: -0.7,
+    gravity: 0.3,
+
+    //Platform game properties
+    isOnGround: undefined,
+    jumpForce: -10,
+
     //Getters
     centerX: function()
     {
@@ -46,5 +58,5 @@ var spriteObject =
     halfHeight: function()
     {
         return this.height / 2;
-    },
+    }
 };

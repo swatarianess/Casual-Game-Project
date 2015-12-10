@@ -4,7 +4,7 @@
     var ctx = canvas.getContext("2d");
 
 //The game map, Not a proper tested one.
-    var map = [];
+    var mapObjects = [];
     //TODO create game map array properly
 
 //The game objects map
@@ -20,6 +20,15 @@
     var PLAYER = 5;
     //TODO Add more stuff to map code
 
+//Sprites that need to be accessed by name
+    var player = null;
+    var enemy = null;
+    var platform = null;
+    var box = null;
+    var wall = null;
+    var hudMessage = null;
+    var hudDisplay = null;
+
 //The size of each "tile"
     var SIZE = 32;
 
@@ -30,10 +39,6 @@
 //The number of columns on the tilesheet
     var tilesheetColumns = null;
     //TODO find out how many columns the tilesheet has
-
-//Sprites
-    var hudMessage = null;
-    var hudDisplay = null;
 
 //Arrays to store the game objects
     var sprites = [];
@@ -57,9 +62,9 @@
 
 //Tilesheet stuff for later
     var image = new Image();
-    image.addEventListener("", null, false);
-    image.src = "";
-    assetsToLoad.push(null);
+    image.addEventListener("load", loadHandler, false);
+    image.src = "../includes/completeSheet.jpg";
+    assetsToLoad.push(image);
 
 //Vars for debugging purposes
     //Execution time for startup
@@ -119,6 +124,8 @@
                 break;
 
             case BUILD_MAP:
+                //buildMap(mapObjects);
+                //buildMap(gameObjects);
                 createObjects();
                 gameState = PLAYING;
                 break;
@@ -165,20 +172,56 @@
                     switch (currentTile) {
                         case FLOOR:
                             //TODO Create floor objects
+                            platform = Object.create(spriteObject);
+                            platform.sourceX = tilesheetX;
+                            platform.sourceY = tilesheetY;
+                            platform.x = column * SIZE;
+                            platform.y = row * SIZE;
                             break;
+
                         case BOX:
                             //TODO Create Box objects
+                            box = Object.create(spriteObject);
+                            box.sourceX = tilesheetX;
+                            box.sourceY = tilesheetY;
+                            box.x = column * SIZE;
+                            box.y = row * SIZE;
                             break;
+
                         case WALL:
                             //TODO Create Border objects
+                            wall = Object.create(spriteObject);
+                            wall.sourceX = tilesheetX;
+                            wall.sourceY = tilesheetY;
+                            wall.x = column * SIZE;
+                            wall.y = row * SIZE;
                             break;
+
                         case ENEMY:
                             //TODO Create Enemy sprites
+                            enemy = Object.create(spriteObject);
+                            enemy.sourceX = tilesheetX;
+                            enemy.sourceY = tilesheetY;
+                            enemy.x = column * SIZE;
+                            enemy.y = row * SIZE;
                             break;
+
                         case PLAYER:
                             //TODO Already defined in the main program, no need to preceed it with var
+                            player = Object.create(spriteObject);
+                            player.sourceX = tilesheetX;
+                            player.sourceY = tilesheetY;
+                            player.x = column * SIZE;
+                            player.y = row * SIZE;
                             break;
+
                         default:
+                            var sprite = Object.create(spriteObject);
+                            sprite.sourceX = tilesheetX;
+                            sprite.sourceY = tilesheetY;
+                            sprite.x = column * SIZE;
+                            sprite.y = row * SIZE;
+                            sprites.push(sprite);
                             break;
                     }
 
@@ -188,7 +231,7 @@
     }
 
     /**
-     * Creating Objects.
+     * Creates Objects.
      */
     function createObjects() {
 
@@ -217,6 +260,9 @@
 
     }
 
+    /**
+     * The main game's "engine". Handles all the player input and physics.
+     */
     function playGame() {
         //Up
         if (moveUp && !moveDown) {
@@ -237,9 +283,12 @@
         if (moveRight && !moveLeft) {
             hudMessage.text = "Right Key.";
         }
-        //TODO Add all the collision code here.
+        //TODO Add the collision code here.
     }
 
+    /**
+     * Refresh the screen and redraws the sprites.
+     */
     function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -259,6 +308,8 @@
                 }
             }
         }
+
+        //TODO create a better method of which to display multiple messages?
         if (hudMessage !== null) {
             ctx.font = hudMessage.font;
             ctx.fill = hudMessage.fill;
@@ -266,20 +317,7 @@
             ctx.textAlign = "center";
             ctx.fillText(hudMessage.text, hudMessage.x, hudMessage.y);
         }
-        //Display the game messages
-        /*
-         if (messages.length !== 0) {
-         for (var j = 0; j < messages.length; j++) {
-         var m = messages[i];
-         if (m.visible) {
-         ctx.font = m.font;
-         ctx.fillStyle = m.fillStyle;
-         ctx.textBaseline = m.textBaseline;
-         ctx.fillText(m.text, m.x, m.y);
-         }
-         }
-         }
-         */
+
     }
 
 }());
