@@ -112,6 +112,9 @@
 
     update();
 
+    /**
+     *  Updates the game state. The bread and butter? Infinite loop.
+     */
     function update() {
         //The animation loop
         requestAnimationFrame(update, canvas);
@@ -232,7 +235,7 @@
     }
 
     /**
-     * Creates Objects.
+     * Creates Objects. Mostly messages.
      */
     function createObjects() {
 
@@ -333,23 +336,12 @@
             }
         }
 
-        //TODO create a better method of which to display multiple messages?
-       /*
-        if (hudMessage !== null) {
-            ctx.font = hudMessage.font;
-            ctx.fill = hudMessage.fill;
-            ctx.fillStyle = hudMessage.fillStyle;
-            ctx.textAlign = "center";
-            ctx.fillText(hudMessage.text, hudMessage.x, hudMessage.y);
-        }
-        */
-
         //Display the game messages
         if(messages.length !== 0)
         {
-            for(var i = 0; i < messages.length; i++)
+            for(var j = 0; j < messages.length; j++)
             {
-                var message = messages[i];
+                var message = messages[j];
                 if(message.visible)
                 {
                     ctx.font = message.font;
