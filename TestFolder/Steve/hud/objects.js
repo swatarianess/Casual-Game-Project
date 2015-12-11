@@ -10,7 +10,7 @@ var messageObject =
     y: 0,
     visible: true,
     text: "Message",
-    font: "normal bold 20px Helvetica",
+    font: "normal bold 15px Helvetica",
     fillStyle: "red",
     textBaseline: "top"
 };

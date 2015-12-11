@@ -11,6 +11,55 @@
     var gameObjects = [];
     //TODO create gameObject map array
 
+//Coords
+    var platformBottom = [
+        [ 5, 501 ], [ 40, 501 ],
+        [ 75, 501 ], [ 110, 501 ],
+        [ 145, 501 ], [ 180, 501 ],
+        [ 215, 501 ], [ 250, 501 ],
+        [ 285, 501 ], [ 320, 501 ],
+        [ 355, 501 ], [ 390, 501 ],
+        [ 425, 501 ]];
+
+    var platformMiddle_Row1 = [
+        [ 355, 421 ], [ 390, 421 ],
+        [ 425, 421 ], [ 460, 421 ],
+        [ 495, 421 ], [ 530, 421 ],
+        [ 565, 421 ], [ 600, 421 ],
+        [ 635, 421 ]];
+
+    var platformLeft_Row2 = [
+        [ 5, 306 ], [ 40, 306 ],
+        [ 75, 306 ], [ 110, 306 ],
+        [ 145, 306 ],[ 180, 306 ],
+        [ 215, 306 ],[ 250, 306 ],
+        [ 285, 306 ],[ 320, 306 ]];
+
+    var platformRight_Row2 = [
+        [ 670, 306 ], [ 705, 306 ],
+        [ 740, 306 ], [ 775, 306 ],
+        [ 810, 306 ], [ 845, 306 ],
+        [ 880, 306 ], [ 915, 306 ],
+        [ 950, 306 ], [ 985, 306 ]];
+
+    var platformMiddle_Row3 = [
+        [ 320, 191 ], [ 355, 191 ],
+        [ 390, 191 ], [ 425, 191 ],
+        [ 460, 191 ], [ 495, 191 ],
+        [ 530, 191 ], [ 565, 191 ],
+        [ 600, 191 ], [ 635, 191 ],
+        [ 655, 191 ], [ 670, 191 ]];
+
+    var platformLeft_Row3 = [
+        [ 5, 191 ], [ 40, 191 ],
+        [ 75, 191 ], [ 110, 191 ],
+        [ 145, 191 ]];
+
+    var platformRight_Row3 = [
+        [ 845, 191 ], [ 880, 191 ],
+        [ 915, 191 ], [ 950, 191 ],
+        [ 985, 191 ]];
+
 //Map code
     var EMPTY = 0;
     var FLOOR = 1;
@@ -41,11 +90,12 @@
     //TODO find out how many columns the tilesheet has
 
 //Arrays to store the game objects
-    var sprites = [];
-    var messages = [];
-
     var assetsToLoad = [];
     var assetsLoaded = 0;
+
+    var sprites = [];
+    var messages = [];
+    assetsToLoad.push(sprites,messages);
 
 //Game sates
     var LOADING = 0;
@@ -147,12 +197,11 @@
     function loadHandler() {
         console.time("Resources loaded");
         assetsLoaded++;
-
-        if(assetsLoaded === assetsToLoad.length){
+        if (assetsLoaded === assetsToLoad.length) {
             image.removeEventListener("load", loadHandler, false);
             console.timeEnd("Resources loaded");
             gameState = BUILD_MAP;
-            console.log("Game loaded.")
+            console.log("Game loaded: " + assetsLoaded + " assets.")
         }
 
     }
@@ -162,11 +211,10 @@
      *  Builds the map, placing platforms, enemies and the player.
      * @param levelMap An array containing data of the level
      */
-    function buildMap(levelMap)
-    {
+    function buildMap(levelMap) {
         for (var row = 0; row < ROWS; row++) {
             for (var column = 0; column < COLUMNS; column++) {
-                var currentTile = levelMap[row][column];
+                var currentTile = levelMap[ row ][ column ];
 
                 if (currentTile !== EMPTY) {
                     //Find the tile's x and y position on the tile sheet
@@ -241,16 +289,16 @@
 
         hudDisplay = Object.create(spriteObject);
         hudDisplay.sourceX = 0;
-        hudDisplay.sourceY = 129;
+        hudDisplay.sourceY = 10;
         hudDisplay.sourceWidth = 316;
         hudDisplay.sourceHeight = 290;
-        hudDisplay.width = 316;
-        hudDisplay.height = 290;
+        hudDisplay.width = 200;
+        hudDisplay.height = 200;
         hudDisplay.x = canvas.width / 2 - hudDisplay.width / 2;
         hudDisplay.y = canvas.height / 2 - hudDisplay.height / 2;
         hudDisplay.visible = true;
         sprites.push(hudDisplay);
-        console.log("Loaded: " + sprites.length + " spirits");
+        console.log("Created: " + sprites.length + " sprites");
 
 
         hudMessage = Object.create(messageObject);
@@ -258,9 +306,10 @@
         hudMessage.y = 30;
         hudMessage.font = "bold 30px Helvetica";
         hudMessage.fillStyle = "black";
+        hudMessage.textAlign = "center";
         hudMessage.text = "";
         messages.push(hudMessage);
-        console.log("Loaded: " + messages.length + " messages");
+        console.log("Created: " + messages.length + " messages");
 
     }
 
@@ -280,23 +329,24 @@
 
         //Left
         if (moveLeft && !moveRight) {
-            hudMessage.text = "Left Key."
+            hudMessage.text = "Left Key.";
         }
 
         //Right
         if (moveRight && !moveLeft) {
             hudMessage.text = "Right Key.";
+
         }
         //TODO Add the collision code here.
         //TODO Add destroyBox() when target and boxObject collide
     }
 
     /**
-     *  This should be called when it reaches the target. As a means of making the box vanish.
+     *  This should be called when it reaes the target. As a means of making the box vanish.
+     *
      * @param box The boxObject that will be "destroyed".
      */
-    function destroyBox(box)
-    {
+    function destroyBox(box) {
         //Change the hedgehog's state and update the object
         box.state = box.FINISH;
         box.update();
@@ -306,8 +356,7 @@
         //Remove the hedgehog after 500ms
         setTimeout(killBox, 500);
 
-        function killBox()
-        {
+        function killBox() {
             box.visible = false;
         }
     }
@@ -322,31 +371,28 @@
         //Display the sprites
         if (sprites.length !== 0) {
             for (var i = 0; i < sprites.length; i++) {
-                var sprite = sprites[i];
+                var sprite = sprites[ i ];
                 if (sprite.visible) {
                     ctx.drawImage
-                       (
-                           image,
-                           sprite.sourceX, sprite.sourceY,
-                           sprite.sourceWidth, sprite.sourceHeight,
-                           Math.floor(sprite.x), Math.floor(sprite.y),
-                           sprite.width, sprite.height
-                       );
+                    (
+                        image,
+                        sprite.sourceX, sprite.sourceY,
+                        sprite.sourceWidth, sprite.sourceHeight,
+                        Math.floor(sprite.x), Math.floor(sprite.y),
+                        sprite.width, sprite.height
+                    );
                 }
             }
         }
 
         //Display the game messages
-        if(messages.length !== 0)
-        {
-            for(var j = 0; j < messages.length; j++)
-            {
-                var message = messages[j];
-                if(message.visible)
-                {
+        if (messages.length !== 0) {
+            for (var j = 0; j < messages.length; j++) {
+                var message = messages[ j ];
+                if (message.visible) {
                     ctx.font = message.font;
                     ctx.fillStyle = message.fillStyle;
-                    ctx.textAlign = "center";
+                    ctx.textAlign = message.textAlign;
                     ctx.textBaseline = message.textBaseline;
                     ctx.fillText(message.text, message.x, message.y);
                 }
