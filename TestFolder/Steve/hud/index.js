@@ -320,22 +320,33 @@
         //Up
         if (moveUp && !moveDown) {
             hudMessage.text = "UP key.";
+            setTimeout(function(){
+                hudMessage.text = "";
+            },1500);
         }
 
         //Down
         if (moveDown && !moveUp) {
             hudMessage.text = "Down Key.";
+            setTimeout(function(){
+                hudMessage.text = "";
+            },1500);
         }
 
         //Left
         if (moveLeft && !moveRight) {
             hudMessage.text = "Left Key.";
+            setTimeout(function(){
+                hudMessage.text = "";
+            },1500);
         }
 
         //Right
         if (moveRight && !moveLeft) {
             hudMessage.text = "Right Key.";
-
+            setTimeout(function(){
+                hudMessage.text = "";
+            },1500);
         }
         //TODO Add the collision code here.
         //TODO Add destroyBox() when target and boxObject collide
