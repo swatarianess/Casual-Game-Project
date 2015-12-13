@@ -61,14 +61,3 @@ var spriteObject =
     }
 };
 
-//--- The box object, because it is special
-boxObject = Object.create(spriteObject);
-
-//States of the box
-boxObject.NORMAL = [1,0];
-boxObject.FINISH = [2,0];
-boxObject.state = boxObject.NORMAL;
-boxObject.update = function(){
-    this.sourceX = this.state[0] * this.sourceWidth;
-    this.sourceY = this.state[1] * this.sourceHeight;
-};

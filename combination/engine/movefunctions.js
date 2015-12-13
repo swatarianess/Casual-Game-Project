@@ -7,9 +7,7 @@
  * @param enemyCircle Object representing the first enemy that circles a platform.
  */
 function defineMoveMethods(player, box, enemySpin, enemyCircle) {
-    if(enemyCircle === undefined) {
-        //Do something.
-    }
+    if(enemyCircle === undefined) { enemyCircle = null; }
 
     player.move = function() {
         if (this.jump && this.isOnGround) {
