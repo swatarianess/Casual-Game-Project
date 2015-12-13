@@ -120,7 +120,7 @@ window.addEventListener("keyup", function (event) {
 update();
 
 /**
- *  Updates the game state. The bread and butter? Infinite loop.
+ *  Main Game loop.
  */
 function update() {
     //The animation loop
@@ -210,6 +210,11 @@ function createObjects() {
 
     //---------------------------CREATING-OTHER-OBJECTS---------------------------------||
 
+    //Create the Target
+    theTarget.src= targetCanvas;
+    theTarget.sourceHeight = targetCanvas.height;
+    theTarget.sourceWidth = targetCanvas.width;
+
     //Create the display for the HUD
     hudDisplay = Object.create(spriteObject);
     hudDisplay.sourceX = 0;
@@ -241,8 +246,7 @@ function createObjects() {
  * The main game's "engine". Handles all the player input and physics.
  */
 function playGame() {
-   // ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     player.move();
 
     //Checks collision between PLAYER -> GROUND
@@ -332,4 +336,7 @@ function render() {
         }
     }
     drawTargetFrame();
+    theTarget.draw();
+    player.draw();
+
 }

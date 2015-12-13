@@ -32,18 +32,18 @@ var target =
     }
 };
 
-var goalCanvas = document.createElement("canvas"),
-    goalContext = goalCanvas.getContext("2d");
+var targetCanvas = document.createElement("canvas"),
+    targetContext = goalCanvas.getContext("2d");
 
 function drawTargetFrame() {
-    goalContext.save();
-	var goalGrad = goalContext.createLinearGradient(0, 0, 0, goalCanvas.height);
-	goalGrad.addColorStop(target.topColour, utils.colorToRGB("#F84A57", 0));
-	goalGrad.addColorStop(1, utils.colorToRGB("#F84A57", target.transp));
-	goalContext.fillStyle = goalGrad;
-	goalContext.clearRect(0, 0, goalCanvas.width, goalCanvas.height);
-	goalContext.fillRect(0, 0, goalCanvas.width, goalCanvas.height);
-	goalContext.restore();
+    targetContext.save();
+	var targetGrad = targetContext.createLinearGradient(0, 0, 0, goalCanvas.height);
+    targetGrad.addColorStop(target.topColour, utils.colorToRGB("#F84A57", 0));
+    targetGrad.addColorStop(1, utils.colorToRGB("#F84A57", target.transp));
+    targetContext.fillStyle = goalGrad;
+    targetContext.clearRect(0, 0, goalCanvas.width, goalCanvas.height);
+    targetContext.fillRect(0, 0, goalCanvas.width, goalCanvas.height);
+    targetContext.restore();
 	
 	target.updateAnimation();
 }
