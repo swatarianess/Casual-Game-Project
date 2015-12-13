@@ -93,7 +93,7 @@ function keyUpHandler(event) {
  */
 function update() {
     //The animation loop
-    requestAnimationFrame(update, c);
+    utils.requestAnimationFrame(update, c);
 
     switch (gameState) {
         case LOADING:
@@ -187,6 +187,7 @@ function drawFrame() { //AKA UPDATE
     animFrame = window.requestAnimationFrame(drawFrame);
     ctx.clearRect(0, 0, c.width, c.height);
     player.move();
+
     //noinspection JSDuplicatedDeclaration
     for (var i = 0; i < solids.length; i++) {
         solids[i].draw();
@@ -194,6 +195,7 @@ function drawFrame() { //AKA UPDATE
             player.isOnGround = true;
         }
     }
+
     //noinspection JSDuplicatedDeclaration
     for (var i = 0; i < objects.length; i++) {
         objects[i].move();
@@ -211,6 +213,7 @@ function drawFrame() { //AKA UPDATE
             objects[i].draw();
         }
     }
+
     //noinspection JSDuplicatedDeclaration
     for (var i = 0; i < enemies.length; i++) {
         enemies[i].move();
@@ -225,28 +228,11 @@ function drawFrame() { //AKA UPDATE
     drawGoalFrame();
     theTarget.draw();
     player.draw();
+    //Render
 }
 
 function createObjects(){
 
-    //Create player object, giving fields
-    player = new Box(playerSheet.spriteWidth / scale, playerSheet.spriteHeight / scale, "#ff0000");
-    player.jumpForce = -9;
-    player.src = playerSheet;
-    player.sourceHeight = 70;
-    player.sourceWidth = 50;
-    player.WALKING = 0;
-    player.STANDING = 1;
-    player.JUMPING = 2;
-    player.state = player.STANDING;
-    player.RIGHT = 0;
-    player.LEFT = 1;
-    player.facing = player.RIGHT;
-    player.currentFrame = 0;
-    player.numberOfFrames = 3;
-
-    //Create theTarget object
-    theTarget = new Box(thingSheet.spriteWidth, 50)
 }
 
 /**

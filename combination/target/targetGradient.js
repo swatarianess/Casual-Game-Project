@@ -35,7 +35,7 @@ var target =
 var goalCanvas = document.createElement("canvas"),
     goalContext = goalCanvas.getContext("2d");
 
-function drawGoalFrame() {
+function drawTargetFrame() {
     goalContext.save();
 	var goalGrad = goalContext.createLinearGradient(0, 0, 0, goalCanvas.height);
 	goalGrad.addColorStop(target.topColour, utils.colorToRGB("#F84A57", 0));

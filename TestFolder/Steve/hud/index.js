@@ -166,7 +166,7 @@
      */
     function update() {
         //The animation loop
-        requestAnimationFrame(update, canvas);
+        utils.requestAnimationFrame(update, canvas);
 
         switch (gameState) {
             case LOADING:

@@ -1,11 +1,6 @@
 /**
  * Created by Marik on 11/12/2015.
  */
-/*var c = null; //Canvas
-var enemies = []; //Enemy Array
-var objects = []; //Objects Array
-var lvl = 0; //Level variable*/
-
 /**
  * Builds the level.
  */

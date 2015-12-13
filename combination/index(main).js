@@ -6,10 +6,6 @@ var ctx = canvas.getContext("2d");
 var mapObjects = [];
 //TODO create game map array properly
 
-//The game objects map
-var gameObjects = [];
-//TODO create gameObject map array
-
 //Sprites that need to be accessed by name
 var player = null;
 var enemy = null;
@@ -22,7 +18,7 @@ var hudDisplay = null;
 var SIZE = 70;
 var SCALE = 2;
 
-//The number of rows and columns
+//The number of rows and columns in the sprite-sheet(s)
 var ROWS = null;
 var COLUMNS = null;
 
@@ -41,8 +37,9 @@ assetsToLoad.push(sprites,messages,solids,objects,enemies);
 //Game sates
 var LOADING = 0;
 var BUILD_MAP = 1;
-var PLAYING = 2;
-var OVER = 3;
+var TITLE_SCREEN = 2;
+var PLAYING = 3;
+var OVER = 4;
 var gameState = LOADING;
 
 //Directions
@@ -132,7 +129,6 @@ function update() {
     switch (gameState) {
         case LOADING:
             console.log("Starting up game...");
-            //TODO Add title screen here.
             loadHandler();
             break;
 
@@ -143,12 +139,15 @@ function update() {
             gameState = PLAYING;
             break;
 
+        case TITLE_SCREEN:
+            break;
+
         case PLAYING:
             playGame();
             break;
 
         case OVER:
-            //TODO Add what happens when you lose.
+            //TODO Add message saying game over
             break;
     }
     render();
@@ -166,52 +165,50 @@ function loadHandler() {
 
 }
 
-
-/**
- *  Builds the map, placing platforms, enemies and the player.
- * @param Level The level for which objects will be positioned to.
- */
-function buildMap(Level) {
-    switch (lvl) {
-        case 1:
-            player.x = 200;
-            player.y = 200;
-
-            objects[0].x = 400;
-            objects[0].y = 150;
-
-            enemies[0].x = enemies[0].linkedObject.x + enemies[0].radius;
-            enemies[0].y = enemies[0].linkedObject.y;
-
-            theTarget.x = c.width / 5 * 3;
-            theTarget.y = c.height - 50;
-
-            //TODO add platform positions
-            break;
-    }
-}
-
 /**
  * Creates Objects. Mostly messages.
  */
 function createObjects() {
 
-    //Creating Box object
+    //-----------------------------CREATING OBJECTS-------------------------------------\\
     box = Object.create(boxObject(SIZE/SCALE,SIZE/SCALE,"#0000ff"));
+
+    //Creating borders + Floor
+    solids[0] = Object.create(box(c.width/5*3,50,"#00ff00"));
+    solids[1] = Object.create(box(c.width/5*3,50,"#00ff00"));
+    solids[2] = Object.create(box(c.width, 50, "#00ff00"));
+    solids[3] = Object.create(box(50, c.height - 50, "#00ff00"));
+    solids[4] = Object.create(box(50, c.height - 50, "#00ff00"));
+
+    //Creating enemy
+    enemy = new Object.create(boxObject(SIZE/SCALE, SIZE/SCALE,"#ff00ff"));
+
+    //----------------------------------------------------------------------------------||
+
+    defineMoveMethods(player,objects[0],enemies[0]);
+
+    //Setting Box object fields
     box.friction = 0.94;
     box.src = spritesheet;
     box.sourceY = 4 * SIZE;
-    sprites.push(box);
 
-    //Creating first enemy
-    enemy = new Object.create(boxObject(SIZE/SCALE, SIZE/SCALE,"#ff00ff"));
+    //Setting enemy fields
     enemy.linkedObject = box;
 
-    //Creating Border
-    solids[0] = Object.create(box(c.width/5*3,50,"#00ff00"));
+    //Setting Border fields
     solids[0].y = c.height - solids[0].height;
-    solids[0 ].src = spritesheet;
-    solids[0 ].sourceWidth = spritesheet.spriteWidth*3;
+    solids[0].src = spritesheet;
+    solids[0].sourceWidth = spritesheet.spriteWidth*3;
+
+    solids[1].width = solids[1].width/3+(c.width/5 - spritesheet.spriteWidth);
+    solids[1].x = solids[0 ].width + spritesheet.spriteWidth;
+
+    solids[4].x = c.width - solids[3].width;
+
+    //Add all the objects to the array which we draw everything in. May not use.
+    //sprites.push(box,enemy,solids[0],solids[1],solids[2],solids[3],solids[4]);
+
+    //---------------------------CREATING-OTHER-OBJECTS---------------------------------||
 
     //Create the display for the HUD
     hudDisplay = Object.create(spriteObject);
@@ -236,12 +233,17 @@ function createObjects() {
     messages.push(hudMessage);
     console.log("Created: " + messages.length + " messages");
 
+    buildLevel(); //Sets the Position of the sprites
+
 }
 
 /**
  * The main game's "engine". Handles all the player input and physics.
  */
 function playGame() {
+   // ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    player.move();
 
     //Checks collision between PLAYER -> GROUND
     //noinspection JSDuplicatedDeclaration
@@ -280,25 +282,26 @@ function playGame() {
         if (checkCollision(enemies[i], player)) {
             window.cancelAnimationFrame(animFrame);
             console.log("Game over.");
+            gameState = BUILD_MAP; // Recreates the objects and goes through the loop "flow". Waterfall?
             //startLevel();
-            //TODO Restart Game
         }
     }
+
     //Draw Target frame
     //Draw target
     //Draw Player
-
+    //TODO Make render draw out all the sprites OR Update?
 }
 
 /**
- * Refresh the screen and redraws the sprites.
+ * Draws the objects onto the screen.
  */
 function render() {
-    //Redrawing
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //Redrawing!
+    //animFrame = window.requestAnimationFrame(render) //No need to loop within loop
 
-    //Display the sprites
     if (sprites.length !== 0) {
+        //noinspection JSDuplicatedDeclaration
         for (var i = 0; i < sprites.length; i++) {
             var sprite = sprites[ i ];
             if (sprite.visible) {
@@ -316,8 +319,9 @@ function render() {
 
     //Display the game messages
     if (messages.length !== 0) {
-        for (var j = 0; j < messages.length; j++) {
-            var message = messages[ j ];
+        //noinspection JSDuplicatedDeclaration
+        for (var i = 0; i < messages.length; i++) {
+            var message = messages[ i ];
             if (message.visible) {
                 ctx.font = message.font;
                 ctx.fillStyle = message.fillStyle;
@@ -327,47 +331,5 @@ function render() {
             }
         }
     }
-
-}
-
-function startLevel(){
-    defineMoveMethods(player, objects[0], enemies[0]);
-
-    solids[0] = new Box(c.width / 5 * 3, 50, "#00ff00");
-    solids[0].y = c.height - solids[0].height;
-    solids[0].src = thingSheet;
-    solids[0].sourceWidth = thingSheet.spriteWidth * 3;
-    solids[1] = Object.create(solids[0]);
-    solids[1].width = solids[1].width / 3 + (c.width / 5 - thingSheet.spriteWidth);
-    solids[1].x = solids[0].width + thingSheet.spriteWidth;
-    solids[2] = new Box(c.width, 50, "#00ff00");
-    solids[3] = new Box(50, c.height - 50, "#00ff00");
-    solids[4] = new Box(50, c.height - 50, "#00ff00");
-    solids[4].x = c.width - solids[3].width;
-
-    player.jump = false;
-    player.moveLeft = false;
-    player.moveRight = false;
-    player.isOnGround = undefined;
-    player.ax = 0;
-    player.ay = 0;
-    player.vx = 0;
-    player.vy = 0;
-
-    objects[0].friction = 0.94;
-    objects[0].src = thingSheet;
-    objects[0].sourceY = 4 * 70;
-
-    enemies[0].radius = 100;
-    enemies[0].frame = 0;
-    enemies[0].src = thingSheet;
-    enemies[0].sourceX = 70;
-    enemies[0].sourceY = 4 * 70;
-
-    theTarget.src = goalCanvas;
-    theTarget.sourceHeight = goalCanvas.height;
-    theTarget.sourceWidth = goalCanvas.width;
-
-    buildLevel();
-    drawFrame();
+    drawTargetFrame();
 }
