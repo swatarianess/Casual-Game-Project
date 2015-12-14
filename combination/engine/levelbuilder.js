@@ -4,7 +4,7 @@
 /**
  * Builds the level.
  */
-function buildLevel() {
+function buildLevel(lvl) {
     switch (lvl) {
         case 1:
             player.x = 200;
@@ -16,8 +16,8 @@ function buildLevel() {
             enemies[0].x = enemies[0].linkedObject.x + enemies[0].radius;
             enemies[0].y = enemies[0].linkedObject.y;
 
-            theTarget.x = c.width / 5 * 3;
-            theTarget.y = c.height - 50;
+            theTarget.x = canvas.width / 5 * 3;
+            theTarget.y = canvas.height - 50;
             break;
     }
 }

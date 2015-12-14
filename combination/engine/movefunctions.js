@@ -63,13 +63,13 @@ function defineMoveMethods(player, box, enemySpin, enemyCircle) {
 
         if (this.x < 0) {
             this.x = 0;
-        } else if (this.x > c.width - this.width) {
-            this.x = c.width - this.width;
+        } else if (this.x > canvas.width - this.width) {
+            this.x = canvas.width - this.width;
         }
         if (this.y < 0) {
             this.y = 0;
-        } else if (this.y > c.height - this.height) {
-            this.y = c.height - this.height;
+        } else if (this.y > canvas.height - this.height) {
+            this.y = canvas.height - this.height;
             this.isOnGround = true;
         }
 

@@ -1,4 +1,4 @@
-function boxObject (width, height, color) {
+function BoxObject (width, height, color) {
     if (width === undefined) { width = 50; }
     if (height === undefined) { height = 50; }
     if (color === undefined) { color = Math.random() * 0xffffff; }
@@ -39,7 +39,7 @@ function boxObject (width, height, color) {
     }
 }
 
-boxObject().prototype.draw = function () {
+BoxObject.prototype.draw = function () {
     if (this.visible) {
         if (this.src === "") {
             ctx.save();

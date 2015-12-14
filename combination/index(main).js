@@ -1,5 +1,5 @@
 //Canvas
-var canvas = document.querySelector("canvas");
+var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
 //The game map, Not a proper tested one.
@@ -13,6 +13,7 @@ var platform = null;
 var box = null;
 var hudMessage = null;
 var hudDisplay = null;
+var theTarget = null;
 
 //The size of each "tile"
 var SIZE = 70;
@@ -48,16 +49,19 @@ var moveDown = false;
 var moveRight = false;
 var moveLeft = false;
 
+//Frame var
+var gameFrame;
+
 //Tilesheet stuff for later
 var playerSheet = new Image();
-playerSheet.src = "/resources/avatar.png";
+playerSheet.src = "../combination/resources/avatar.png";
 playerSheet.spriteWidth = 50;
 playerSheet.spriteHeight = 70;
-//assetsToLoad.push(playerSheet);
+assetsToLoad.push(playerSheet);
 
 var spritesheet = new Image();
 //image.addEventListener("load", loadHandler, false);
-spritesheet.src = "/resources/spritesheet.png";
+spritesheet.src = "../combination/resources/spritesheet.png";
 spritesheet.spriteWidth = 70;
 spritesheet.spriteHeight = 70;
 assetsToLoad.push(spritesheet);
@@ -91,8 +95,9 @@ window.addEventListener("keydown", function (event) {
             moveRight = true;
             break;
         case keycode.R:
-            window.cancelAnimationFrame(animFrame);
+            window.cancelAnimationFrame(gameFrame);
             //Whatever to recreate the Level
+            gameState = BUILD_MAP;
             break;
     }
 }, false);
@@ -116,7 +121,6 @@ window.addEventListener("keyup", function (event) {
             break;
     }
 }, false);
-
 update();
 
 /**
@@ -124,7 +128,8 @@ update();
  */
 function update() {
     //The animation loop
-    utils.requestAnimationFrame(update, canvas);
+    requestAnimationFrame(update, canvas);
+
 
     switch (gameState) {
         case LOADING:
@@ -133,8 +138,6 @@ function update() {
             break;
 
         case BUILD_MAP:
-            //buildMap(mapObjects);
-            //buildMap(gameObjects);
             createObjects(); //AKA Startlevel()
             gameState = PLAYING;
             break;
@@ -154,15 +157,15 @@ function update() {
 }
 
 function loadHandler() {
-    assetsLoaded++;
+    /*assetsLoaded++;
     console.time("Resources loaded");
     if (assetsLoaded === assetsToLoad.length) {
         image.removeEventListener("load", loadHandler, false);
         console.timeEnd("Resources loaded");
         gameState = BUILD_MAP;
         console.log("Game loaded: " + assetsLoaded + " assets.")
-    }
-
+    }*/
+    gameState = BUILD_MAP;
 }
 
 /**
@@ -171,39 +174,60 @@ function loadHandler() {
 function createObjects() {
 
     //-----------------------------CREATING OBJECTS-------------------------------------\\
-    box = Object.create(boxObject(SIZE/SCALE,SIZE/SCALE,"#0000ff"));
+    box = new BoxObject(SIZE/SCALE,SIZE/SCALE,"#0000ff");
+    objects[0] = box; //Add box to objects array
+
+    player = new BoxObject(playerSheet.spriteWidth / SCALE,playerSheet.spriteHeight / SCALE, "#ff0000");
+
+    //Create target
+    theTarget = new BoxObject(spritesheet.spriteWidth, 50);
 
     //Creating borders + Floor
-    solids[0] = Object.create(box(c.width/5*3,50,"#00ff00"));
-    solids[1] = Object.create(box(c.width/5*3,50,"#00ff00"));
-    solids[2] = Object.create(box(c.width, 50, "#00ff00"));
-    solids[3] = Object.create(box(50, c.height - 50, "#00ff00"));
-    solids[4] = Object.create(box(50, c.height - 50, "#00ff00"));
+    solids[0] = new BoxObject(canvas.width/5*3,50,"#00ff00");
+    solids[1] = new BoxObject(canvas.width/5*3,50,"#00ff00");
+    solids[2] = new BoxObject(canvas.width, 50, "#00ff00");
+    solids[3] = new BoxObject(50, canvas.height - 50, "#00ff00");
+    solids[4] = new BoxObject(50, canvas.height - 50, "#00ff00");
 
     //Creating enemy
-    enemy = new Object.create(boxObject(SIZE/SCALE, SIZE/SCALE,"#ff00ff"));
-
+    enemy = new BoxObject(SIZE/SCALE, SIZE/SCALE,"#ff00ff");
+    enemies[0] = enemy;
     //----------------------------------------------------------------------------------||
 
     defineMoveMethods(player,objects[0],enemies[0]);
 
-    //Setting Box object fields
+    //Setting player object values
+    player.jumpForce = -9;
+    player.src = playerSheet;
+    player.sourceHeight = 70;
+    player.sourceWidth = 50;
+    player.WALKING = 0;
+    player.STANDING = 1;
+    player.JUMPING = 2;
+    player.state = player.STANDING;
+    player.RIGHT = 0;
+    player.LEFT = 1;
+    player.facing = player.RIGHT;
+    player.currentFrame = 0;
+    player.numberOfFrames = 3;
+
+    //Setting Box object values
     box.friction = 0.94;
     box.src = spritesheet;
     box.sourceY = 4 * SIZE;
 
-    //Setting enemy fields
+    //Setting enemy values
     enemy.linkedObject = box;
 
-    //Setting Border fields
-    solids[0].y = c.height - solids[0].height;
+    //Setting Border values
+    solids[0].y = canvas.height - solids[0].height;
     solids[0].src = spritesheet;
     solids[0].sourceWidth = spritesheet.spriteWidth*3;
 
-    solids[1].width = solids[1].width/3+(c.width/5 - spritesheet.spriteWidth);
+    solids[1].width = solids[1].width/3+(canvas.width/5 - spritesheet.spriteWidth);
     solids[1].x = solids[0 ].width + spritesheet.spriteWidth;
 
-    solids[4].x = c.width - solids[3].width;
+    solids[4].x = canvas.width - solids[3].width;
 
     //Add all the objects to the array which we draw everything in. May not use.
     //sprites.push(box,enemy,solids[0],solids[1],solids[2],solids[3],solids[4]);
@@ -211,12 +235,12 @@ function createObjects() {
     //---------------------------CREATING-OTHER-OBJECTS---------------------------------||
 
     //Create the Target
-    theTarget.src= targetCanvas;
+    theTarget.src = targetCanvas;
     theTarget.sourceHeight = targetCanvas.height;
     theTarget.sourceWidth = targetCanvas.width;
 
     //Create the display for the HUD
-    hudDisplay = Object.create(spriteObject);
+    hudDisplay = Object.create(BoxObject);
     hudDisplay.sourceX = 0;
     hudDisplay.sourceY = 10;
     hudDisplay.sourceWidth = 316;
@@ -231,14 +255,14 @@ function createObjects() {
 
 
     //Create Hud Message
-    hudMessage = Object.create(messageObject(canvas.width/2,30));
+    /*hudMessage = Object.create(MessageObject);
     hudMessage.font = "bold 30px Helvetica";
     hudMessage.fillStyle = "black";
     hudMessage.textAlign = "center";
     messages.push(hudMessage);
-    console.log("Created: " + messages.length + " messages");
+    console.log("Created: " + messages.length + " messages");*/
 
-    buildLevel(); //Sets the Position of the sprites
+    buildLevel(1); //Sets the Position of the sprites
 
 }
 
@@ -246,6 +270,7 @@ function createObjects() {
  * The main game's "engine". Handles all the player input and physics.
  */
 function playGame() {
+    //gameFrame = window.requestAnimationFrame(update);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     player.move();
 
@@ -269,7 +294,7 @@ function playGame() {
         if (checkCollision(player, objects[i], true) === "bottom") {
             player.isOnGround = true;
         }
-        if (checkCollision(theTarget, objects[i]) && objects[i].y >= c.height - 5) {
+        if (checkCollision(theTarget, objects[i]) && objects[i].y >= canvas.height - 5) {
             console.log("You win.");
             objects.splice(i, 1);
         } else {
@@ -284,9 +309,9 @@ function playGame() {
         enemies[i].draw();
 
         if (checkCollision(enemies[i], player)) {
-            window.cancelAnimationFrame(animFrame);
+            window.cancelAnimationFrame(gameFrame);
             console.log("Game over.");
-            gameState = BUILD_MAP; // Recreates the objects and goes through the loop "flow". Waterfall?
+            gameState = OVER; // Recreates the objects and goes through the loop "flow". Waterfall?
             //startLevel();
         }
     }
@@ -294,7 +319,7 @@ function playGame() {
     //Draw Target frame
     //Draw target
     //Draw Player
-    //TODO Make render draw out all the sprites OR Update?
+    //TODO Check if render drawing after is better than "double" drawing
 }
 
 /**
@@ -335,8 +360,10 @@ function render() {
             }
         }
     }
-    drawTargetFrame();
-    theTarget.draw();
-    player.draw();
+    if(gameState == PLAYING) {
+        drawTargetFrame();
+        theTarget.draw();
+        player.draw();
+    }
 
 }
