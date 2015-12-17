@@ -96,7 +96,7 @@ function genEq(diff, lvl, ans) {
         eq = convertEq(num1, num2, sign, ans || "nope");
         splitEq = eq.split(" ");
         goodEq = checkEq(splitEq);
-    } while (!goodEq)
+    } while (!goodEq);
 
     eq = eq + " " + eval(eq);
     document.getElementById("result").innerHTML = eq;

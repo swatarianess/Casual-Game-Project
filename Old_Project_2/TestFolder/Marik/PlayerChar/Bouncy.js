@@ -10,7 +10,7 @@ window.onload = function () {
         numBoxes = 3,
         bounce = -1,
         human = new Box(40, 50, "#0000ff"),
-        enemies = []
+        enemies = [];
     objectsToDraw = [];
 
     //Giving value to the human variables
