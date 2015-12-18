@@ -10,6 +10,7 @@ function buildLevel() {
             objects[0] = Object.create(box);
             objects[0].x = 400;
             objects[0].y = 150;
+            objects[0].equation = assignEquation(objects,1,1,8);
 
             enemies[0] = Object.create(enemyCircle);
             enemies[0].linkedObject = objects[0];
@@ -17,6 +18,7 @@ function buildLevel() {
             theGoal.x = c.width / 5 * 3;
             theGoal.y = c.height - 50;
             break;
+
         case 2:
             player.x = 200;
             player.y = 200;
@@ -28,6 +30,8 @@ function buildLevel() {
             objects[1] = Object.create(box);
             objects[1].x = 500;
             objects[1].y = 150;
+            objects[1].correct = false;
+            objects[1].equation = "1+1";
 
             solids[5] = Object.create(platform);
             solids[5].x = 400;

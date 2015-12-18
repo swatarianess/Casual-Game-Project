@@ -24,6 +24,7 @@ function Box (width, height, color) {
     this.sourceWidth = 70;
     this.sourceHeight = 70;
     this.correct = true;
+    this.equation = "";
     this.visible = true;
 
     this.centerX = function() {

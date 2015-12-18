@@ -92,14 +92,14 @@ function genEq(diff, lvl, ans) {
 	} else {
 		sign = sign * 2;
 	}
-	
-	do {
+
+    while (!goodEq) {
 		var num1 = Math.random() * 10 * diff * Math.ceil(lvl / 10); //Rebalance later.
 		var num2 = Math.random() * 10 * diff * Math.ceil(lvl / 10); //Rebalance later.
 		eq = convertEq(num1, num2, sign, ans || "nope");
 		splitEq = eq.split(" ");
 		goodEq = checkEq(splitEq);
-	} while (!goodEq);
+	}
 	
 	eq = eq + " " + eval(eq);
 	//document.getElementById("result").innerHTML = eq;

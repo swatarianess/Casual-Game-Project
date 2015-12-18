@@ -21,14 +21,18 @@ var lvl = 1,
     CREDITS = 2,
     titleState = TITLE;
 
-playerSheet.src = "../resources/Sheet.png";
+//Player Stylesheet
+playerSheet.src = "resources/Sheet.png";
 playerSheet.spriteWidth = 50;
 playerSheet.spriteHeight = 70;
-thingSheet.src = "../resources/Stuff Sheet.png";
+
+//Game stylesheet, contains: Platforms + enemies
+thingSheet.src = "resources/Stuff Sheet.png";
 thingSheet.spriteWidth = 70;
 thingSheet.spriteHeight = 70;
-titleBackground.src = "../resources/TitleScreenBackgroundTemp.png";
+titleBackground.src = "resources/TitleScreenBackgroundTemp.png";
 
+//Create Objects
 var player = new Box(playerSheet.spriteWidth * SCALE, playerSheet.spriteHeight * SCALE),
     theGoal = new Box(thingSheet.spriteWidth, 50),
     box = new Box(70 * SCALE, 70 * SCALE),
@@ -38,6 +42,7 @@ var player = new Box(playerSheet.spriteWidth * SCALE, playerSheet.spriteHeight *
 
 defineMoveMethods(player, box, enemyCircle, enemyPlatform);
 
+//Setting player field's values
 player.jumpForce = -9;
 player.src = playerSheet;
 player.sourceHeight = 70;
@@ -50,20 +55,25 @@ player.LEFT = 1;
 player.currentFrame = 0;
 player.numberOfFrames = 3;
 
+//Setting theGoal field's values
 theGoal.src = goalCanvas;
 theGoal.sourceHeight = goalCanvas.height;
 theGoal.sourceWidth = goalCanvas.width;
+
+//Setting box field's values
 
 box.friction = 0.94;
 box.src = thingSheet;
 box.sourceY = 4 * 70;
 
+//Setting enemyCircle field's values
 enemyCircle.radius = 100;
 enemyCircle.frame = 0;
 enemyCircle.src = thingSheet;
 enemyCircle.sourceX = 70;
 enemyCircle.sourceY = 4 * 70;
 
+//Setting enemyPlatform field's values
 enemyPlatform.RIGHT = 0;
 enemyPlatform.DOWN = 1;
 enemyPlatform.LEFT = 2;
@@ -74,9 +84,11 @@ enemyPlatform.src = thingSheet;
 enemyPlatform.sourceX = 70;
 enemyPlatform.sourceY = 4 * 70;
 
+//Setting platform field's values
 platform.src = thingSheet;
 platform.sourceWidth = thingSheet.spriteWidth * 3;
 
+//Creating border objects
 solids[0] = new Box(c.width / 5 * 3, 50, "#00ff00");
 solids[0].src = thingSheet;
 solids[0].sourceWidth = thingSheet.spriteWidth * 3;
@@ -176,6 +188,7 @@ function update() {
 function drawFrame() {
     ctx.clearRect(0, 0, c.width, c.height);
     player.move();
+    //noinspection JSDuplicatedDeclaration
     for (var i = 0; i < solids.length; i++) {
         solids[i].draw();
         if (checkCollision(player, solids[i], true) === "bottom"){
@@ -183,12 +196,15 @@ function drawFrame() {
             player.state = player.STANDING;
         }
     }
+    //noinspection JSDuplicatedDeclaration
     for (var i = 0; i < objects.length; i++) {
         objects[i].move();
         checkCollision(objects[i], player, true);
+        //noinspection JSDuplicatedDeclaration
         for (var j = 0; j < solids.length; j++) {
             checkCollision(objects[i], solids[j], true);
         }
+        //noinspection JSDuplicatedDeclaration
         for (var j = 0; j < objects.length; j++) {
             if (j !== i) {
                 checkCollision(objects[i], objects[j], true);
@@ -207,16 +223,18 @@ function drawFrame() {
         } else {
             objects[i].draw();
         }
+
     }
-	for (var i = 0; i < enemies.length; i++) {
-		enemies[i].move();
-		enemies[i].draw();
+    //noinspection JSDuplicatedDeclaration
+    for (var i = 0; i < enemies.length; i++) {
+        enemies[i].move();
+        enemies[i].draw();
 
         if (checkCollision(enemies[i], player)) {
             console.log("Game over.");
             gameState = OVER;
         }
-	}
+    }
     drawGoalFrame();
     theGoal.draw();
     player.draw();
@@ -284,5 +302,5 @@ function assignEquation(arry,lvl,diff,ans){
         }
     }
     //Returns array of the badBoxes[]
-    return badBoxes;
+   // if(ret){return badBoxes;}
 }
